@@ -1,3 +1,8 @@
+@font-face {
+    font-family: "Minecraft";
+    src: url('./fonts/Minecraftia/Minecraftia-Regular.ttf');
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -6,6 +11,19 @@
 body {
     background: #393939;
 }
+
+button {
+    font-family: 'Minecraft', sans-serif;
+    color: white;
+    background-color: #858585;
+    padding: 0.7rem 2rem;
+    padding-bottom: 0.3rem;
+}
+
+button:active {
+    background-color: #6a88ba;
+}
+
 .container {
     height: 100svh;
     max-width: 1320px;
@@ -49,7 +67,7 @@ body {
     align-items: center;
     top: 0px;
     left: 0px;
-    transition: top 1s, left 1s, bottom 1s, right 1s;
+    transition: top 0.1s, left 0.1s, bottom 0.1s, right 0.1s, transform 0.1s;
 }
 
 .robot img {
@@ -92,4 +110,70 @@ body {
 
 .robot.r-360 img {
     transform: rotate(360deg);
+}
+
+.score {
+    color: #f2dc1b;
+}
+
+#death__screen {
+    display: none;
+
+    position: absolute;
+    width: 900px;
+    height: 900px;
+
+    font-family: 'Minecraft', sans-serif;
+    color: white;
+    background: transparent;
+}
+
+#death__screen.show {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+
+    background: linear-gradient(#4f3d1caa, #6c342ddd);
+}
+
+#death__screen > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#end__screen {
+    display: none;
+
+    position: absolute;
+    width: 900px;
+    height: 900px;
+
+    font-family: 'Minecraft', sans-serif;
+    color: white;
+    background: transparent;
+}
+
+#end__screen.show {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 3rem;
+
+    background-image: linear-gradient(#00000077, #00000077), url('./images/dirt.jpg');
+    
+    box-shadow: 
+        inset 50px 50px 100px black,
+        inset -50px -50px 100px black;
+}
+
+#end__screen > div {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }

@@ -10,9 +10,51 @@
 <body>
     <div class="container">
         <div class="board">
-            <span class="robot" data-row="2" data-column="2" angle="0"><img src="images/steve.png"></span>
+            <span class="robot" data-row="2" data-column="2" data-angle="0"><img src="images/steve.png"></span>
+        </div>
+        <div id="death__screen" class="">
+            <div>
+                <p style="font-size: 200%">Game Over!</p>
+                <small>Steve couldn't find the way</small>
+                <small>Score: <span id="death__score" class="score">42</span></span></small>
+            </div>
+            <div>
+                <button>Try Again</button>
+            </div>
+            <div>
+                <small>Developed by:</small> 
+                <small>Victor de Oliveira Martins Azevedo | 20190018746</small>
+                <small>Pedro Raposo Felix de Sousa | 20190004642</small>
+            </div>
+        </div>
+        <div id="end__screen" class="">
+            <div>
+                <p style="font-size: 200%">You win!</p>
+                <small>Steve found the way</small>
+                <small>Score: <span id="end__score" class="score">42</span></span></small>
+            </div>
+            <div>
+                <button>New Game</button>
+            </div>
+            <div>
+                <small>Developed by:</small> 
+                <small>Victor de Oliveira Martins Azevedo | 20190018746</small>
+                <small>Pedro Raposo Felix de Sousa | 20190004642</small>
+            </div>
         </div>
     </div>
+
+    <div hidden>
+        <audio id="death__audio" src="./audios/death.mp3">
+            O seu navegador não suporta o elemento <code>audio</code>.
+        </audio>
+
+        <audio id="end__audio" src="./audios/theme.mp3">
+            O seu navegador não suporta o elemento <code>audio</code>.
+        </audio>
+    </div>
+    <script src="src/Robot.js"></script>
+    <script src="src/Stack.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
