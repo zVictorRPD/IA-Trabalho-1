@@ -394,7 +394,7 @@ function run() {
         
         document.getElementById('death__screen').classList.add('show');
         document.getElementById('death__score').innerHTML = new Date().getTime() - started_at;
-        document.getElementById('death__audio').play();
+        new Audio('./audios/death.mp3').play();
     }
 }
 
@@ -413,6 +413,7 @@ function canMoveToOffset(xOff, yOff)
 
 createHoles(HOLE_RATE);
 createBoard();
+document.getElementById('end__audio').load();
 
 // Inicia o loop
 started_at = new Date().getTime();
@@ -425,32 +426,35 @@ document.querySelectorAll('button').forEach(function (button) {
     // e o personagem retorna ao estado inicial.
     // Por fim, o loop é recriado
     button.addEventListener('click', function () {
-        clearInterval(loop);
-        document.querySelectorAll('.board .cell').forEach(function (el) {
-            el.remove()
+        new Audio('./audios/button.mp3').play().then(function () {
+            setTimeout(function () {
+                clearInterval(loop);
+                document.querySelectorAll('.board .cell').forEach(function (el) {
+                    el.remove()
+                });
+                robot.style.top = '0';
+                robot.style.left = '0';
+                robot.style.transform = 'rotate(0deg)';
+                robot.dataset.angle = '0';
+        
+                matriz = new Array(36).fill("empty");
+                for (let i = 0; i < 36; i++) {
+                    matriz[i] = new Array(36).fill("empty");
+                }
+        
+                memory = new Stack();
+                past = ['0,0'];
+        
+                createHoles(HOLE_RATE);
+                createBoard();
+        
+                document.getElementById('death__screen').classList.remove('show');
+                document.getElementById('end__screen').classList.remove('show');
+                document.getElementById('end__audio').load();
+        
+                started_at = new Date().getTime();
+                loop = setInterval(run, LOOP_INTERVAL);
+            }, 35);
         });
-        robot.style.top = '0';
-        robot.style.left = '0';
-        robot.style.transform = 'rotate(0deg)';
-        robot.dataset.angle = '0';
-
-        matriz = new Array(36).fill("empty");
-        for (let i = 0; i < 36; i++) {
-            matriz[i] = new Array(36).fill("empty");
-        }
-
-        memory = new Stack();
-        past = ['0,0'];
-
-        createHoles(HOLE_RATE);
-        createBoard();
-
-        document.getElementById('death__screen').classList.remove('show');
-        document.getElementById('end__screen').classList.remove('show');
-        document.getElementById('death__audio').load();
-        document.getElementById('end__audio').load();
-
-        started_at = new Date().getTime();
-        loop = setInterval(run, LOOP_INTERVAL);
     });
 });
