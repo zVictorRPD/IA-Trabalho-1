@@ -6,9 +6,6 @@
     end = fim
 */
 
-const HOLE_RATE = 0.2; // Proporção de obstáculos em campo de 0 a 1
-const LOOP_INTERVAL = 100; // Tempo de execução do Loop em segundos
-
 //Global variables
 const board = document.querySelector(".board");
 const robot = document.querySelector(".robot");
@@ -16,14 +13,14 @@ let memory = new Stack();
 let past = ['0,0'];
 let started_at;
 
-let matriz = new Array(36).fill("empty");
-for (let i = 0; i < 36; i++) {
-    matriz[i] = new Array(36).fill("empty");
+let matriz = new Array(BOARD_ROWS).fill("empty");
+for (let i = 0; i < BOARD_ROWS; i++) {
+    matriz[i] = new Array(BOARD_COLS).fill("empty");
 }
 
 function createBoard() {
     matriz[0][0] = "start";
-    matriz[35][35] = "end";
+    matriz[BOARD_ROWS - 1][BOARD_COLS - 1] = "end"; 
 
     matriz.forEach((row, rowIndex) => {
         row.forEach((column, columnIndex) => {
@@ -35,11 +32,14 @@ function createBoard() {
             board.appendChild(div);
         });
     });
+
+    board.style.width = `${BOARD_COLS * 25}px`;
+    board.style.height = `${BOARD_ROWS * 25}px`;
 }
 
 function createHoles(rate) {
-    for (let i = 0; i < 36; i++) {
-        for (let j = 0; j < 36; j++) {
+    for (let i = 0; i < BOARD_ROWS; i++) {
+        for (let j = 0; j < BOARD_COLS; j++) {
             if (Math.random() < rate && matriz[i][j] === 'empty') matriz[i][j] = "hole";
         }
     }
@@ -60,7 +60,7 @@ function run() {
     // Caso o personagem encontre o destino final é exibida a tela de "Victory"
     // além da pontuação até o momento sendo representada como a quantidade de
     // iterações
-    if(posX === 35 && posY === 35) {
+    if(posX === (BOARD_COLS - 1) && posY === (BOARD_ROWS - 1)) {
         clearInterval(loop);
 
         document.getElementById('end__screen').classList.add('show');
@@ -437,9 +437,9 @@ document.querySelectorAll('button').forEach(function (button) {
                 robot.style.transform = 'rotate(0deg)';
                 robot.dataset.angle = '0';
         
-                matriz = new Array(36).fill("empty");
-                for (let i = 0; i < 36; i++) {
-                    matriz[i] = new Array(36).fill("empty");
+                matriz = new Array(BOARD_ROWS).fill("empty");
+                for (let i = 0; i < BOARD_ROWS; i++) {
+                    matriz[i] = new Array(BOARD_COLS).fill("empty");
                 }
         
                 memory = new Stack();

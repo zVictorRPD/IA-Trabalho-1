@@ -34,11 +34,12 @@ button:active {
 }
 .board {
     position: relative;
-    width: 900px;
-    height: 900px;
+    /* width: 900px;
+    height: 900px; */
     display: flex;
     flex-wrap: wrap;
 }
+
 .cell {
     width: 25px;
     height: 25px;
