@@ -81,6 +81,71 @@ function run() {
      * NO = Noroeste = 315°
      */
 
+    switch(parseInt(robot.dataset.angle)) {
+        case 0:
+        case 360:
+            assertNeighboringCellsExcept('O');
+        break;
+
+        case 45:
+        case -315:
+            assertNeighboringCellsExcept('NO');
+        break;
+
+        case 90:
+        case -270:
+            assertNeighboringCellsExcept('N');
+        break;
+
+        case 135:
+        case -225:
+            assertNeighboringCellsExcept('NE');
+        break;
+
+        case 180:
+        case -180:
+            assertNeighboringCellsExcept('E');
+        break;
+
+        case 225:
+        case -135:
+            assertNeighboringCellsExcept('SE');
+        break;
+
+        case 270:
+        case -90:
+            assertNeighboringCellsExcept('S');
+        break;
+
+        case 315:
+        case -45:
+            assertNeighboringCellsExcept('SO');
+        break;
+    }
+
+    switch(ALGORITHM) {
+        case Algorithms.DFS:
+            moveUsingDepthFirstSearchAlgorithm();
+        break;
+    }
+}
+
+
+function assertNeighboringCellsExcept(except) {
+    const posX = parseInt(robot.style.left || 0) / 25;
+    const posY = parseInt(robot.style.top || 0) / 25;
+
+    const cardinals = {
+        SE: [ 1,  1,  45],
+        S:  [ 0,  1,  90],
+        SO: [-1,  1, 135],
+        O:  [-1,  0, 180],
+        NO: [-1, -1, 225],
+        N:  [ 0, -1, 270],
+        NE: [ 1, -1, 315],
+        E:  [ 1,  0,   0]
+    }
+
     // Realiza tratativas para avaliar para quais locais o personagem pode se mover baseado
     // nas regras definidas na função canMoveToOutput(). Caso o personagem possa se mover
     // até a localização desejada, as coordenadas e a direção são adicionadas à pilha para
@@ -90,311 +155,14 @@ function run() {
     // foi considerado sem sentido o personagem voltar ao destino anterior.
     // Dessa forma, por exemplo, se o personagem está virado para o Sudoeste, ele
     // estava no destino à Noroeste.
-    switch(parseInt(robot.dataset.angle)) {
-        case 0:
-        case 360:
-            // TODO: refatorar essa porção do código. Os ifs são sempres os mesmos
-            // tirando os casos específicos de cada orientação do personagem.
+    for(let cardinal in cardinals) {
+        if(except === cardinal) continue;
 
-            if(canMoveToOffset(1, 1)) { // SE
-                memory.push([posY + 1, posX + 1, 45]);
-            }
+        const [xOff, yOff, angle] = cardinals[cardinal];
 
-            if(canMoveToOffset(0, 1)) { // S
-                memory.push([posY + 1, posX, 90]);
-            }
-
-            if(canMoveToOffset(-1, 1)) { // SO
-                memory.push([posY + 1, posX - 1, 135]);
-            }
-
-            // if(canMoveToOffset(-1, 0)) { // O
-            //     memory.push([posY, posX - 1, 180]);
-            // }
-
-            if(canMoveToOffset(-1, -1)) { // NO
-                memory.push([posY - 1, posX - 1, 225]);
-            }
-
-            if(canMoveToOffset(0, -1)) { // N
-                memory.push([posY - 1, posX, 270]);
-            }
-
-            if(canMoveToOffset(1, -1)) { // NE
-                memory.push([posY - 1, posX + 1, 315]);
-            }
-
-            if(canMoveToOffset(1, 0)) { // E
-                memory.push([posY, posX + 1, 0]);
-            }
-        break;
-
-        case 45:
-        case -315:
-            if(canMoveToOffset(1, 1)) { // SE
-                memory.push([posY + 1, posX + 1, 45]);
-            }
-
-            if(canMoveToOffset(0, 1)) { // S
-                memory.push([posY + 1, posX, 90]);
-            }
-
-            if(canMoveToOffset(-1, 1)) { // SO
-                memory.push([posY + 1, posX - 1, 135]);
-            }
-
-            if(canMoveToOffset(-1, 0)) { // O
-                memory.push([posY, posX - 1, 180]);
-            }
-
-            // if(canMoveToOffset(-1, -1)) { // NO
-            //     memory.push([posY - 1, posX - 1, 225]);
-            // }
-
-            if(canMoveToOffset(0, -1)) { // N
-                memory.push([posY - 1, posX, 270]);
-            }
-
-            if(canMoveToOffset(1, -1)) { // NE
-                memory.push([posY - 1, posX + 1, 315]);
-            }
-
-            if(canMoveToOffset(1, 0)) { // E
-                memory.push([posY, posX + 1, 0]);
-            }
-        break;
-
-        case 90:
-        case -270:
-            if(canMoveToOffset(1, 1)) { // SE
-                memory.push([posY + 1, posX + 1, 45]);
-            }
-
-            if(canMoveToOffset(0, 1)) { // S
-                memory.push([posY + 1, posX, 90]);
-            }
-
-            if(canMoveToOffset(-1, 1)) { // SO
-                memory.push([posY + 1, posX - 1, 135]);
-            }
-
-            if(canMoveToOffset(-1, 0)) { // O
-                memory.push([posY, posX - 1, 180]);
-            }
-
-            if(canMoveToOffset(-1, -1)) { // NO
-                memory.push([posY - 1, posX - 1, 225]);
-            }
-
-            // if(canMoveToOffset(0, -1)) { // N
-            //     memory.push([posY - 1, posX, 270]);
-            // }
-
-            if(canMoveToOffset(1, -1)) { // NE
-                memory.push([posY - 1, posX + 1, 315]);
-            }
-
-            if(canMoveToOffset(1, 0)) { // E
-                memory.push([posY, posX + 1, 0]);
-            }
-        break;
-
-        case 135:
-        case -225:
-            if(canMoveToOffset(1, 1)) { // SE
-                memory.push([posY + 1, posX + 1, 45]);
-            }
-
-            if(canMoveToOffset(0, 1)) { // S
-                memory.push([posY + 1, posX, 90]);
-            }
-
-            if(canMoveToOffset(-1, 1)) { // SO
-                memory.push([posY + 1, posX - 1, 135]);
-            }
-
-            if(canMoveToOffset(-1, 0)) { // O
-                memory.push([posY, posX - 1, 180]);
-            }
-
-            if(canMoveToOffset(-1, -1)) { // NO
-                memory.push([posY - 1, posX - 1, 225]);
-            }
-
-            if(canMoveToOffset(0, -1)) { // N
-                memory.push([posY - 1, posX, 270]);
-            }
-
-            // if(canMoveToOffset(1, -1)) { // NE
-            //     memory.push([posY - 1, posX + 1, 315]);
-            // }
-
-            if(canMoveToOffset(1, 0)) { // E
-                memory.push([posY, posX + 1, 0]);
-            }
-        break;
-
-        case 180:
-        case -180:
-            if(canMoveToOffset(1, 1)) { // SE
-                memory.push([posY + 1, posX + 1, 45]);
-            }
-
-            if(canMoveToOffset(0, 1)) { // S
-                memory.push([posY + 1, posX, 90]);
-            }
-
-            if(canMoveToOffset(-1, 1)) { // SO
-                memory.push([posY + 1, posX - 1, 135]);
-            }
-
-            if(canMoveToOffset(-1, 0)) { // O
-                memory.push([posY, posX - 1, 180]);
-            }
-
-            if(canMoveToOffset(-1, -1)) { // NO
-                memory.push([posY - 1, posX - 1, 225]);
-            }
-
-            if(canMoveToOffset(0, -1)) { // N
-                memory.push([posY - 1, posX, 270]);
-            }
-
-            if(canMoveToOffset(1, -1)) { // NE
-                memory.push([posY - 1, posX + 1, 315]);
-            }
-
-            // if(canMoveToOffset(1, 0)) { // E
-            //     memory.push([posY, posX + 1, 0]);
-            // }
-        break;
-
-        case 225:
-        case -135:
-            // if(canMoveToOffset(1, 1)) { // SE
-            //     memory.push([posY + 1, posX + 1, 45]);
-            // }
-
-            if(canMoveToOffset(0, 1)) { // S
-                memory.push([posY + 1, posX, 90]);
-            }
-
-            if(canMoveToOffset(-1, 1)) { // SO
-                memory.push([posY + 1, posX - 1, 135]);
-            }
-
-            if(canMoveToOffset(-1, 0)) { // O
-                memory.push([posY, posX - 1, 180]);
-            }
-
-            if(canMoveToOffset(-1, -1)) { // NO
-                memory.push([posY - 1, posX - 1, 225]);
-            }
-
-            if(canMoveToOffset(0, -1)) { // N
-                memory.push([posY - 1, posX, 270]);
-            }
-
-            if(canMoveToOffset(1, -1)) { // NE
-                memory.push([posY - 1, posX + 1, 315]);
-            }
-
-            if(canMoveToOffset(1, 0)) { // E
-                memory.push([posY, posX + 1, 0]);
-            }
-        break;
-
-        case 270:
-        case -90:
-            if(canMoveToOffset(1, 1)) { // SE
-                memory.push([posY + 1, posX + 1, 45]);
-            }
-
-            // if(canMoveToOffset(0, 1)) { // S
-            //     memory.push([posY + 1, posX, 90]);
-            // }
-
-            if(canMoveToOffset(-1, 1)) { // SO
-                memory.push([posY + 1, posX - 1, 135]);
-            }
-
-            if(canMoveToOffset(-1, 0)) { // O
-                memory.push([posY, posX - 1, 180]);
-            }
-
-            if(canMoveToOffset(-1, -1)) { // NO
-                memory.push([posY - 1, posX - 1, 225]);
-            }
-
-            if(canMoveToOffset(0, -1)) { // N
-                memory.push([posY - 1, posX, 270]);
-            }
-
-            if(canMoveToOffset(1, -1)) { // NE
-                memory.push([posY - 1, posX + 1, 315]);
-            }
-
-            if(canMoveToOffset(1, 0)) { // E
-                memory.push([posY, posX + 1, 0]);
-            }
-        break;
-
-        case 315:
-        case -45:
-            if(canMoveToOffset(1, 1)) { // SE
-                memory.push([posY + 1, posX + 1, 45]);
-            }
-
-            if(canMoveToOffset(0, 1)) { // S
-                memory.push([posY + 1, posX, 90]);
-            }
-
-            // if(canMoveToOffset(-1, 1)) { // SO
-            //     memory.push([posY + 1, posX - 1], 135);
-            // }
-
-            if(canMoveToOffset(-1, 0)) { // O
-                memory.push([posY, posX - 1, 180]);
-            }
-
-            if(canMoveToOffset(-1, -1)) { // NO
-                memory.push([posY - 1, posX - 1, 225]);
-            }
-
-            if(canMoveToOffset(0, -1)) { // N
-                memory.push([posY - 1, posX, 270]);
-            }
-
-            if(canMoveToOffset(1, -1)) { // NE
-                memory.push([posY - 1, posX + 1, 315]);
-            }
-
-            if(canMoveToOffset(1, 0)) { // E
-                memory.push([posY, posX + 1, 0]);
-            }
-        break;
-    }
-
-    try {
-        // Remove da pilha o próximo destino do personagem
-        // Caso a pilha esteja vazia isso indica que as opções acabaram e o jogo terminou
-        let next_offset = memory.pop();
-
-        // Move o personagem para o próximo destino e define a direção do mesmo
-        moveRobot(...next_offset);
-    
-        // Adiciona o destino no array contendo as coordenadas percorridas
-        past.push(`${next_offset[0]},${next_offset[1]}`);
-    } catch(e) {
-        // A pilha está vazia. Dessa forma, o loop é finalizado
-        // e é exibida a tela de "Game Over". Também é mostrado na tela 
-        // o tempo em milisegundos até a finalização do jogo
-
-        clearInterval(loop);
-        
-        document.getElementById('death__screen').classList.add('show');
-        document.getElementById('death__score').innerHTML = new Date().getTime() - started_at;
-        new Audio('./audios/death.mp3').play();
+        if(canMoveToOffset(xOff, yOff)) {
+            memory.push([posY + yOff, posX + xOff, angle]);
+        }
     }
 }
 
@@ -458,3 +226,28 @@ document.querySelectorAll('button').forEach(function (button) {
         });
     });
 });
+
+function moveUsingDepthFirstSearchAlgorithm()
+{
+    try {
+        // Remove da pilha o próximo destino do personagem
+        // Caso a pilha esteja vazia isso indica que as opções acabaram e o jogo terminou
+        let next_offset = memory.pop();
+
+        // Move o personagem para o próximo destino e define a direção do mesmo
+        moveRobot(...next_offset);
+    
+        // Adiciona o destino no array contendo as coordenadas percorridas
+        past.push(`${next_offset[0]},${next_offset[1]}`);
+    } catch(e) {
+        // A pilha está vazia. Dessa forma, o loop é finalizado
+        // e é exibida a tela de "Game Over". Também é mostrado na tela 
+        // o tempo em milisegundos até a finalização do jogo
+
+        clearInterval(loop);
+        
+        document.getElementById('death__screen').classList.add('show');
+        document.getElementById('death__score').innerHTML = new Date().getTime() - started_at;
+        new Audio('./audios/death.mp3').play();
+    }
+}
