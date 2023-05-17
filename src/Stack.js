@@ -1,11 +1,13 @@
 class Stack {
     size;
     top;
+    length;
 
     constructor(size = null) 
     {
         this.top = -1;
         this.size = size;
+        this.length = 0;
 
         for(let i = 0; i < size; i++) {
             this[i] = null;
@@ -18,6 +20,7 @@ class Stack {
             if(this.top === this.size - 1) throw new Error('Pilha cheia');
         }
 
+        this.length++;
         this[++this.top] = value;
     }
 
@@ -28,6 +31,7 @@ class Stack {
         let popped = this[this.top];
 
         delete this[this.top--];
+        this.length--;
 
         return popped;
     }
