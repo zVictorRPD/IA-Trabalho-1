@@ -62,7 +62,7 @@ function run() {
             // Posição atual do personagem
             const posX = parseInt(robot.style.left || 0) / 25;
             const posY = parseInt(robot.style.top || 0) / 25;
-            
+
             // Caso o personagem encontre o destino final é exibida a tela de "Victory"
             // além da pontuação até o momento sendo representada como a quantidade de
             // iterações
@@ -214,7 +214,7 @@ function canMoveToOffset(xOff, yOff)
     const posY = parseInt(robot.style.top || 0) / 25;
 
     const is_past_cell = ALGORITHM == Algorithms.DFS 
-        ? past.indexOf(`${posY + yOff},${posX + xOff}`) === -1
+        ? past.indexOf(`${posY + yOff},${posX + xOff}`) !== -1
         : astar_past.find(function (past) {
             const [y, x] = past.split(',');
             
@@ -417,7 +417,6 @@ function moveUsingAStarSearchAlgorithm()
         [y, x, angle, cost] = astar_memory.shift();
         // assertNeighboringCellsExcept();
     }
-
 
     cost_live = calculateNumTurns(robot.dataset.angle, angle);
     // cost_live++;
