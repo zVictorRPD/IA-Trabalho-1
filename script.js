@@ -290,7 +290,7 @@ document.getElementById('end__audio').load();
 
 // Inicia o loop
 started_at = new Date().getTime();
-let loop = setInterval(run, LOOP_INTERVAL);
+// let loop = setInterval(run, LOOP_INTERVAL);
 
 document.querySelectorAll('button').forEach(function (button) {
     // Adiciona um listener a todos os botões para que,

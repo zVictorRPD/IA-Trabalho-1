@@ -18,6 +18,7 @@ button {
     background-color: #858585;
     padding: 0.7rem 2rem;
     padding-bottom: 0.3rem;
+    cursor: pointer;
 }
 
 button:active {
@@ -115,6 +116,46 @@ button:active {
 
 .score {
     color: #f2dc1b;
+}
+
+.form-control {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+#start__screen {
+    position: absolute;
+    width: 900px;
+    height: 900px;
+    z-index: 2;
+    font-family: 'Minecraft', sans-serif;
+    color: white;
+    background: url('./images/start_screen.jpg') no-repeat top center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+#start__screen .flex {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#start__screen .flex.wrap {
+    max-width: 580px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+#start__screen .flex.wrap .form-control {
+    width: 50%;
 }
 
 #death__screen {

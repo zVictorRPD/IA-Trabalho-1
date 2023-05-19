@@ -13,6 +13,64 @@
 </head>
 <body>
     <div class="container">
+        <div id="start__screen">
+            <div class="flex" style="margin-top: 20vh;">
+                <p style="font-size: 200%">Trabalho 1 de I.A.</p>
+                <small>Developed by:</small> 
+                <small>Victor de Oliveira Martins Azevedo | 20190018746</small>
+                <small>Pedro Raposo Felix de Sousa | 20190004642</small>
+            </div>
+            <div class="flex wrap">
+                <div class="form-control">
+                    <label for="BOARD_ROWS">Número de linhas</label>
+                    <select name="" id="BOARD_ROWS">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label for="BOARD_COLS">Número de Colunas</label>
+                    <select name="" id="BOARD_COLS">
+                        <option value="10">10</option>
+                        <option value="20">20</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label for="HOLE_RATE">Taxa de obstáculos</label>
+                    <select name="" id="HOLE_RATE">
+                        <option value="0.1">Muito poucos</option>
+                        <option value="0.15">Poucos</option>
+                        <option value="0.2">Normal</option>
+                        <option value="0.3">Muitos</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label for="LOOP_INTERVAL">Velocidade de movimento (ms)</label>
+                    <select name="" id="LOOP_INTERVAL">
+                        <option value="100">Muito rápido</option>
+                        <option value="500">Rápido</option>
+                        <option value="1000">Normal</option>
+                        <option value="1500">Lento</option>
+                        <option value="2000">Muito lento</option>
+                    </select>
+                </div>
+                <div class="form-control">
+                    <label for="ALGORITHM">Algoritmo</label>
+                    <select name="" id="ALGORITHM">
+                        <option value="dfs">Busca por profundidade</option>
+                        <option value="a*">Busca A*</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex">
+                <button style="margin-bottom: 2rem;">Resetar configurações</button>
+                <button id="start_game">Start</button>
+            </div>
+        </div>
         <div class="board">
             <span class="robot" data-row="2" data-column="2" data-angle="0"><img src="images/steve.png"></span>
         </div>
