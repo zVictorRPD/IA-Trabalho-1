@@ -1,12 +1,4 @@
-/* 
-    empty = espaço vazio
-    hole = buraco/obstáculo
-    robot = robô
-    start = início
-    end = fim
-*/
-
-//Global variables
+// Variáveis globais
 const board = document.querySelector(".board");
 const robot = document.querySelector(".robot");
 let memory = new Stack();
@@ -17,11 +9,11 @@ let astar_memory = [[0, 0, 0, 0]]; // [Y, X, angle, cost]
 let astar_past = ['0,0,0'];
 let cost_live = 0;
 
-let matriz = new Array(BOARD_ROWS).fill("empty");
-for (let i = 0; i < BOARD_ROWS; i++) {
-    matriz[i] = new Array(BOARD_COLS).fill("empty");
-}
+let loop;
+let matriz;
 
+// Criando os elementos HTML que representam as células da matriz
+// que compoem o campo
 function createBoard() {
     matriz[0][0] = "start";
     matriz[BOARD_ROWS - 1][BOARD_COLS - 1] = "end"; 
@@ -41,6 +33,7 @@ function createBoard() {
     board.style.height = `${BOARD_ROWS * 25}px`;
 }
 
+// Adicionando os obstáculos à matriz considerando apenas células vazias
 function createHoles(rate) {
     for (let i = 0; i < BOARD_ROWS; i++) {
         for (let j = 0; j < BOARD_COLS; j++) {
@@ -49,6 +42,7 @@ function createHoles(rate) {
     }
 }
 
+// Move visualmente o robô para a posição especificada e define sua direção
 function moveRobot(row, col, angle) {
     robot.style.top = `${row * 25}px`;
     robot.style.left = `${col * 25}px`;
@@ -56,6 +50,7 @@ function moveRobot(row, col, angle) {
     robot.dataset.angle = angle;
 }
 
+// Função que executa o loop
 function run() {
     switch(ALGORITHM) {
         case Algorithms.DFS:
@@ -134,6 +129,7 @@ function run() {
     }
 }
 
+// Checa todos os vizinhos mais próximo do robô e decide para quais pode se mover
 function assertNeighboringCellsExcept(except) {
     const posX = parseInt(robot.style.left || 0) / 25;
     const posY = parseInt(robot.style.top || 0) / 25;
@@ -154,7 +150,7 @@ function assertNeighboringCellsExcept(except) {
     // até a localização desejada, as coordenadas e a direção são adicionadas à pilha para
     // permitir a navegação do personagem
 
-    // NOTE: Algumas coordenadas estão comentadas pois, sob a heurística atual,
+    // NOTE: Algumas coordenadas estão comentadas pois, sob o pensamento atual,
     // foi considerado sem sentido o personagem voltar ao destino anterior.
     // Dessa forma, por exemplo, se o personagem está virado para o Sudoeste, ele
     // estava no destino à Noroeste.
@@ -167,9 +163,10 @@ function assertNeighboringCellsExcept(except) {
             if(ALGORITHM === Algorithms.DFS) {
                 memory.push([posY + yOff, posX + xOff, angle]);
             } else {
-                // console.log(caculateHeuristics());
+                // Realiza o calculo de custo para a Busca A*;
                 const node = [posY + yOff, posX + xOff, angle, cost_live + calculateNumTurns(parseInt(robot.dataset.angle), angle) + caculateHeuristics(posX + xOff, posY + yOff)];
 
+                // Porcura se o nó a ser visitado já foi visitado
                 const memory_node = astar_memory.find(function (m_node) {
                     for(let i = 0; i < m_node.length; i++) {
                         if(m_node[i] !== node[i]) {
@@ -180,7 +177,9 @@ function assertNeighboringCellsExcept(except) {
                     return true;
                 });
 
+                // Caso já tenha sido visitado é avaliado se o custo do novo é menor que o anterior
                 if(memory_node) {
+                    // Caso o custo seja menor, o nó passado é removido da fila e adiciona o novo
                     if(memory_node[3] > node[3]) {
                         memory_node_index = astar_memory.findIndex(function (m_node) {
                             for(let i = 0; i < m_node.length; i++) {
@@ -196,9 +195,11 @@ function assertNeighboringCellsExcept(except) {
                         astar_memory.push(node);
                     }
                 } else {
+                    // Caso não tenha sido visitado é adicionado à fila
                     astar_memory.push(node);
                 }
 
+                // Ordena a fila por custo de maneira crescente
                 astar_memory.sort(function (node_a, node_b) {
                     return node_a[3] - node_b[3];
                 });
@@ -207,12 +208,14 @@ function assertNeighboringCellsExcept(except) {
     }
 }
 
+// Verifica se o robô pode se mover para uma célula específica baseado em xOff e yOff
 function canMoveToOffset(xOff, yOff)
 {
     // Posição atual do personagem
     const posX = parseInt(robot.style.left || 0) / 25;
     const posY = parseInt(robot.style.top || 0) / 25;
 
+    // Checa se a célula destino já foi visitada
     const is_past_cell = ALGORITHM == Algorithms.DFS 
         ? past.indexOf(`${posY + yOff},${posX + xOff}`) !== -1
         : astar_past.find(function (past) {
@@ -228,76 +231,39 @@ function canMoveToOffset(xOff, yOff)
             && matriz[posY + yOff][posX + xOff] !== 'hole'; // Não é um obstáculo
 }
 
+// Calcula o custo baseado na distância pela heurística de Manhattan
 function caculateHeuristics(posX, posY)
 {
-    // const posX = parseInt(robot.style.left || 0) / 25;
-    // const posY = parseInt(robot.style.top || 0) / 25;
-
-    // Calcula a distância baseada na heurística de Manhattan
     const x_dist = Math.abs(posX - (BOARD_COLS - 1));
     const y_dist = Math.abs(posY - (BOARD_ROWS - 1));
     const manhattan_dist = x_dist + y_dist;
-    
-    // // Calculate minimum number of turns required to reach goal node
-    // let min_turns = Infinity;
-    // const goal_headings = [0, 45, 90, 135, 180, 225, 270, 315];
-
-    // for (let i = 0; i < goal_headings.length; i++) {
-    //     const heading = goal_headings[i];
-        
-    //     const numTurns = calculateNumTurns(parseInt(robot.dataset.angle), heading);
-
-    //     console.log(numTurns);
-        
-    //     if (numTurns < min_turns) {
-    //         min_turns = numTurns;
-    //     }
-    // }
-    
-    // // Add minimum turn penalty to Manhattan distance
-    // const heuristics = manhattan_dist + min_turns;
-    
-    // return heuristics;
 
     return manhattan_dist;
 }
 
-// Helper function to calculate the number of turns required to change from one heading to another
+// Calcúla o número de giros necessário para ir de uma direção a outra
 function calculateNumTurns(heading1, heading2) {
     const angle_diff = Math.abs(heading1 - heading2);
 
     if (angle_diff === 0) {
-        // No turn required
         return 0;
     } else if (angle_diff === 45 || angle_diff === 315) {
-        // One turn required
         return 1;
     } else if (angle_diff === 90 || angle_diff === 270) {
-        // Two turns required
         return 2;
     } else if (angle_diff === 135 || angle_diff === 225) {
-        // Three turns required
         return 3;
     } else if (angle_diff === 180) {
-        // U-turn, four turns required
         return 4;
     }
 }
 
-createHoles(HOLE_RATE);
-createBoard();
-document.getElementById('end__audio').load();
-
-// Inicia o loop
-started_at = new Date().getTime();
-// let loop = setInterval(run, LOOP_INTERVAL);
-
-document.querySelectorAll('button').forEach(function (button) {
-    // Adiciona um listener a todos os botões para que,
-    // ao serem clicados, o jogo será reiniciado. Pra isso,
-    // o loop é finalizado, o campo regerado (incluindo obstáculos)
-    // e o personagem retorna ao estado inicial.
-    // Por fim, o loop é recriado
+// Adiciona um listener aos botões de "Novo jogo" e "Tentar de nova" para que,
+// ao serem clicados, o jogo exibirá a tela de início. Pra isso,
+// o loop é finalizado, o personagem retorna ao estado inicial,
+// as variávies retornam ao estado inicial e é exibida apenas a 
+// a tela de início com as configurações.
+document.querySelectorAll('.new__game').forEach(function (button) {
     button.addEventListener('click', function () {
         new Audio('./audios/button.mp3').play().then(function () {
             setTimeout(function () {
@@ -305,15 +271,11 @@ document.querySelectorAll('button').forEach(function (button) {
                 document.querySelectorAll('.board .cell').forEach(function (el) {
                     el.remove()
                 });
+
                 robot.style.top = '0';
                 robot.style.left = '0';
                 robot.style.transform = 'rotate(0deg)';
                 robot.dataset.angle = '0';
-        
-                matriz = new Array(BOARD_ROWS).fill("empty");
-                for (let i = 0; i < BOARD_ROWS; i++) {
-                    matriz[i] = new Array(BOARD_COLS).fill("empty");
-                }
         
                 memory = new Stack();
                 past = ['0,0'];
@@ -322,20 +284,16 @@ document.querySelectorAll('button').forEach(function (button) {
                 astar_past = ['0,0,0'];
                 cost_live = 0;
         
-                createHoles(HOLE_RATE);
-                createBoard();
-        
                 document.getElementById('death__screen').classList.remove('show');
                 document.getElementById('end__screen').classList.remove('show');
+                document.getElementById('start__screen').style.display = 'flex';
                 document.getElementById('end__audio').load();
-        
-                started_at = new Date().getTime();
-                loop = setInterval(run, LOOP_INTERVAL);
             }, 35);
         });
     });
 });
 
+// Realiza o loop utilizando o algoritmo de busca em profundidade
 function moveUsingDepthFirstSearchAlgorithm()
 {
     try {
@@ -354,18 +312,13 @@ function moveUsingDepthFirstSearchAlgorithm()
     }
 }
 
+// Realiza o loop utilizando o algoritmo de busca a*
 function moveUsingAStarSearchAlgorithm()
 {
     const posX = parseInt(robot.style.left || 0) / 25;
     const posY = parseInt(robot.style.top || 0) / 25;
     
-    // const [y, x, angle, cost] = astar_memory.shift();
-    // astar_past.push(`${y},${x},${cost}`);
-
     let [y, x, angle, cost] = astar_memory[0];
-
-
-    // console.log(`${y},${x},${cost}`);
 
     if(posX == BOARD_COLS - 1 && posY == BOARD_ROWS - 1) {
         astar_past.push(`${y},${x},${cost}`);
@@ -414,13 +367,11 @@ function moveUsingAStarSearchAlgorithm()
             break;
         }
 
+        // Adiciona o nó de menor custo ao início da fila
         [y, x, angle, cost] = astar_memory.shift();
-        // assertNeighboringCellsExcept();
     }
 
     cost_live = calculateNumTurns(robot.dataset.angle, angle);
-    // cost_live++;
-    // console.log(cost_live);
     moveRobot(y, x, angle);
 
     astar_past.push(`${y},${x},${cost}`);
@@ -431,6 +382,49 @@ function moveUsingAStarSearchAlgorithm()
     }
 }
 
+// Inicia o jogo baseado nas configfurações definidas na tela de início
+// Cria o campo e adiciona os obstátulos no mesmo. Inicia o loop e grava o
+// momento de início do jogo para cálculo da pontuação
+function start()
+{
+    BOARD_ROWS = parseInt(document.getElementById('BOARD_ROWS').value);
+    BOARD_COLS = parseInt(document.getElementById('BOARD_COLS').value);
+    HOLE_RATE = parseFloat(document.getElementById('HOLE_RATE').value);
+    LOOP_INTERVAL = parseInt(document.getElementById('LOOP_INTERVAL').value);
+    ALGORITHM = document.getElementById('ALGORITHM').value;
+
+    matriz = new Array(BOARD_ROWS).fill("empty");
+
+    for (let i = 0; i < BOARD_ROWS; i++) {
+        matriz[i] = new Array(BOARD_COLS).fill("empty");
+    }
+
+    createHoles(HOLE_RATE);
+    createBoard();
+    document.getElementById('end__audio').load();
+    document.getElementById('start__screen').style.display = 'none';
+
+    started_at = new Date().getTime();
+    loop = setInterval(run, LOOP_INTERVAL);
+}
+
+// Reseta as variáveis para os valores padrões
+function resetConfigs()
+{
+    BOARD_ROWS = 20;
+    BOARD_COLS = 20;
+    HOLE_RATE = 0.2;
+    LOOP_INTERVAL = 500; 
+    ALGORITHM = Algorithms.DFS;
+
+    document.getElementById('BOARD_ROWS').value = BOARD_ROWS.toString();
+    document.getElementById('BOARD_COLS').value = BOARD_COLS.toString();
+    document.getElementById('HOLE_RATE').value = HOLE_RATE.toString();
+    document.getElementById('LOOP_INTERVAL').value = LOOP_INTERVAL.toString();
+    document.getElementById('ALGORITHM').value = ALGORITHM.toString();
+}
+
+// Mostra a tela de vitória
 function showVictoryScreen()
 {
     clearInterval(loop);

@@ -7,8 +7,7 @@
     <title>Trabalho 1</title>
     <link rel="stylesheet" href="style.css">
     <script src="src/Algorithms.js"></script>
-    <script src="src/Constants.js"></script>
-    <script src="src/Robot.js"></script>
+    <script src="src/Configs.js"></script>
     <script src="src/Stack.js"></script>
 </head>
 <body>
@@ -16,7 +15,7 @@
         <div id="start__screen">
             <div class="flex" style="margin-top: 20vh;">
                 <p style="font-size: 200%">Trabalho 1 de I.A.</p>
-                <small>Developed by:</small> 
+                <small>Desenvolvido por:</small> 
                 <small>Victor de Oliveira Martins Azevedo | 20190018746</small>
                 <small>Pedro Raposo Felix de Sousa | 20190004642</small>
             </div>
@@ -25,7 +24,7 @@
                     <label for="BOARD_ROWS">Número de linhas</label>
                     <select name="" id="BOARD_ROWS">
                         <option value="10">10</option>
-                        <option value="20">20</option>
+                        <option value="20" selected>20</option>
                         <option value="30">30</option>
                         <option value="40">40</option>
                     </select>
@@ -34,7 +33,7 @@
                     <label for="BOARD_COLS">Número de Colunas</label>
                     <select name="" id="BOARD_COLS">
                         <option value="10">10</option>
-                        <option value="20">20</option>
+                        <option value="20" selected>20</option>
                         <option value="30">30</option>
                         <option value="40">40</option>
                     </select>
@@ -44,7 +43,7 @@
                     <select name="" id="HOLE_RATE">
                         <option value="0.1">Muito poucos</option>
                         <option value="0.15">Poucos</option>
-                        <option value="0.2">Normal</option>
+                        <option value="0.2" selected>Normal</option>
                         <option value="0.3">Muitos</option>
                     </select>
                 </div>
@@ -52,10 +51,10 @@
                     <label for="LOOP_INTERVAL">Velocidade de movimento (ms)</label>
                     <select name="" id="LOOP_INTERVAL">
                         <option value="100">Muito rápido</option>
-                        <option value="500">Rápido</option>
-                        <option value="1000">Normal</option>
-                        <option value="1500">Lento</option>
-                        <option value="2000">Muito lento</option>
+                        <option value="200">Rápido</option>
+                        <option value="500" selected>Normal</option>
+                        <option value="1000">Lento</option>
+                        <option value="1500">Muito lento</option>
                     </select>
                 </div>
                 <div class="form-control">
@@ -67,8 +66,8 @@
                 </div>
             </div>
             <div class="flex">
-                <button style="margin-bottom: 2rem;">Resetar configurações</button>
-                <button id="start_game">Start</button>
+                <button style="margin-bottom: 2rem;" onclick="resetConfigs()">Resetar configurações</button>
+                <button id="start_game" onclick="start()">Iniciar</button>
             </div>
         </div>
         <div class="board">
@@ -77,29 +76,29 @@
         <div id="death__screen" class="">
             <div>
                 <p style="font-size: 200%">Game Over!</p>
-                <small>Steve couldn't find the way</small>
-                <small>Score: <span id="death__score" class="score">42</span></span></small>
+                <small>Steve não encontrou o caminho</small>
+                <small>Pontuação (tempo em ms): <span id="death__score" class="score">42</span></span></small>
             </div>
             <div>
-                <button>Try Again</button>
+                <button class="new__game">Tentar de novo</button>
             </div>
             <div>
-                <small>Developed by:</small> 
+                <small>Desenvolvido por:</small> 
                 <small>Victor de Oliveira Martins Azevedo | 20190018746</small>
                 <small>Pedro Raposo Felix de Sousa | 20190004642</small>
             </div>
         </div>
         <div id="end__screen" class="">
             <div>
-                <p style="font-size: 200%">You win!</p>
-                <small>Steve found the way</small>
-                <small>Score: <span id="end__score" class="score">42</span></span></small>
+                <p style="font-size: 200%">Vitória!</p>
+                <small>Steve encotrou o caminho</small>
+                <small>Pontuação (tempo em ms): <span id="end__score" class="score">42</span></span></small>
             </div>
             <div>
-                <button>New Game</button>
+                <button class="new__game">Novo jogo</button>
             </div>
             <div>
-                <small>Developed by:</small> 
+                <small>Desenvolvido por:</small> 
                 <small>Victor de Oliveira Martins Azevedo | 20190018746</small>
                 <small>Pedro Raposo Felix de Sousa | 20190004642</small>
             </div>
