@@ -258,38 +258,52 @@ function calculateNumTurns(heading1, heading2) {
     }
 }
 
+// Adiciona um som de clique nos botões
+document.querySelectorAll('button').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+        new Audio('./audios/button.mp3').play().then(() => {
+            setTimeout(() => {
+                this.dispatchEvent(new Event('custom.audio.ready'));
+            }, 200);            
+        });
+    })
+});
+
+document.getElementById('start_game').addEventListener('custom.audio.ready', start);
+document.getElementById('reset_configs').addEventListener('custom.audio.ready', resetConfigs);
+
 // Adiciona um listener aos botões de "Novo jogo" e "Tentar de nova" para que,
 // ao serem clicados, o jogo exibirá a tela de início. Pra isso,
 // o loop é finalizado, o personagem retorna ao estado inicial,
 // as variávies retornam ao estado inicial e é exibida apenas a 
 // a tela de início com as configurações.
 document.querySelectorAll('.new__game').forEach(function (button) {
-    button.addEventListener('click', function () {
-        new Audio('./audios/button.mp3').play().then(function () {
-            setTimeout(function () {
-                clearInterval(loop);
-                document.querySelectorAll('.board .cell').forEach(function (el) {
-                    el.remove()
-                });
+    button.addEventListener('custom.audio.ready', function () {
+        setTimeout(function () {
+            clearInterval(loop);
+            document.querySelectorAll('.board .cell').forEach(function (el) {
+                el.remove()
+            });
 
-                robot.style.top = '0';
-                robot.style.left = '0';
-                robot.style.transform = 'rotate(0deg)';
-                robot.dataset.angle = '0';
-        
-                memory = new Stack();
-                past = ['0,0'];
-                
-                astar_memory = [[0, 0, 0, 0]]; // [Y, X, angle, cost]
-                astar_past = ['0,0,0'];
-                cost_live = 0;
-        
-                document.getElementById('death__screen').classList.remove('show');
-                document.getElementById('end__screen').classList.remove('show');
-                document.getElementById('start__screen').style.display = 'flex';
-                document.getElementById('end__audio').load();
-            }, 35);
-        });
+            robot.style.top = '0';
+            robot.style.left = '0';
+            robot.style.transform = 'rotate(0deg)';
+            robot.dataset.angle = '0';
+    
+            memory = new Stack();
+            past = ['0,0'];
+            
+            astar_memory = [[0, 0, 0, 0]]; // [Y, X, angle, cost]
+            astar_past = ['0,0,0'];
+            cost_live = 0;
+    
+            document.getElementById('death__screen').classList.remove('show');
+            document.getElementById('end__screen').classList.remove('show');
+            document.getElementById('start__screen').style.display = 'flex';
+            document.getElementById('end__audio').load();
+
+            showScore();
+        }, 35);
     });
 });
 
